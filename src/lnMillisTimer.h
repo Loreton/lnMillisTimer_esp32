@@ -23,6 +23,7 @@ class MillisTimer {
         uint32_t        m_remaining     = 0;
         bool            m_isRunning     = false;
         bool            m_hasExpired   = false;
+        bool m_autoReload = false;
 
         TimerCallback   m_onCompleteCallback = nullptr; // Inizializza la callback a null
 
@@ -30,9 +31,10 @@ class MillisTimer {
 
     public:
         // Costruttore
-        MillisTimer();
-
-        void init(const char *name, uint32_t duration, TimerCallback callback = nullptr);
+        // MillisTimer();
+        MillisTimer(void);
+        // void init(const char *name, uint32_t duration, TimerCallback callback = nullptr);
+        void init(const char *name, uint32_t duration, TimerCallback callback=nullptr, bool autoReload=false);
 
         // Inizializza il timer (potrebbe non essere strettamente necessario in una classe con costruttore)
         // void begin();
@@ -57,7 +59,8 @@ class MillisTimer {
         // inline bool hasExpired(void) const { return m_isExpired; }
         bool hasExpired(void);
         const char *name(void) const { return m_name; };
-        bool hasCallBack(void) const { return (m_onCompleteCallback) ? true : false; }; // return true se ha la CallBack attiva
+        // bool hasCallBack(void) const { return (m_onCompleteCallback) ? true : false; }; // return true se ha la CallBack attiva
+        bool hasCallBack(void) const { return m_onCompleteCallback != nullptr; }
 
         // Restituisce il tempo trascorso
         inline uint32_t getElapsedTime(void) const { return m_elapsed; }

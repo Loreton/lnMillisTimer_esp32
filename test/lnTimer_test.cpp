@@ -1,7 +1,7 @@
 
 
 
-#include "lnTimer_Class.h" // Includi il nuovo header
+#include "lnMillisTimer.h" // Includi il nuovo header
 #include "lnLogger_Class.h"    // E il tuo logger
 
 // MillisTimer myTimer("MyFirstTimer"); // Crea un'istanza della classe
@@ -11,7 +11,7 @@ MillisTimer myTimerCB; // Crea un'istanza della classe
 
 
 // void myTimerCallBack() {
-//     LOG_INFO("Callback executed! Timer completed.");
+//     lnLOG_INFO("Callback executed! Timer completed.");
 //     delay(2000);
 //     // myTimer.start(5000, myTimerCallBack); // Avvia il timer per 5 secondi con una lambda function come callback
 //     myTimer.restart(); // Avvia il timer per 5 secondi con una lambda function come callback
@@ -19,11 +19,13 @@ MillisTimer myTimerCB; // Crea un'istanza della classe
 
 
 
+// ##############################################################
+// # Mai usare delay dentro callback di sistemi non bloccanti.
+// ##############################################################
 void myTimerCallBack(MillisTimer *t) {
-    LOG_INFO("Callback executed! Timer completed for timer: %s", t->name());
-    delay(2000);
-    t->restart(); // riAvvia il timer
-    // t->restart(2000); // riAvvia il timer
+    lnLOG_INFO("Callback executed! Timer completed for timer: %s", t->name());
+    // delay(2000);
+    t->restart(5000+2000); // riAvvia il timer senza utilizzare il delay() che è bloccante, ma aggiungendo la pausa al tempo
 }
 
 
@@ -32,7 +34,7 @@ void myTimerCallBack(MillisTimer *t) {
 
 void setup() {
     Serial.begin(115200);
-    // lnLogger.setLogLevel(LOG_LEVEL_DEBUG); // Esempio di inizializzazione del logger
+    // lnLogger.setLogLevel(lnLOG_LEVEL_DEBUG); // Esempio di inizializzazione del logger
     delay(1000);
     lnLog.init();
     myTimer.init("myTimer", 5000); // Avvia il timer per 5 secondi con una lambda function come callback
@@ -48,7 +50,7 @@ void loop() {
     myTimerCB.update(); // Aggiorna lo stato del timer ad ogni loop
 
     if (!myTimer.hasCallBack() && myTimer.hasExpired()) {
-        LOG_INFO("myTimer executed! Timer completed for timer: %s", myTimer.name());
+        lnLOG_INFO("myTimer executed! Timer completed for timer: %s", myTimer.name());
         delay(2000);
         myTimer.restart(); // riAvvia il timer
     }
@@ -56,14 +58,14 @@ void loop() {
 
     // questo non dovrebbe essere eseguito....
     if (!myTimerCB.hasCallBack() && myTimerCB.hasExpired()) {
-        LOG_INFO("myTimerCB executed! Timer completed for timer: %s", myTimerCB.name());
+        lnLOG_INFO("myTimerCB executed! Timer completed for timer: %s", myTimerCB.name());
         delay(2000);
         myTimerCB.restart(); // riAvvia il timer
     }
 
     // Puoi anche interrogare lo stato del timer in qualsiasi momento:
     // if (myTimer.isRunning()) {
-    //     LOG_NOTIFY("Timer running. Remaining: %lu ms", myTimer.getRemainingTime());
+    //     lnLOG_NOTIFY("Timer running. Remaining: %lu ms", myTimer.getRemainingTime());
     // }
     delay(10);
 }
