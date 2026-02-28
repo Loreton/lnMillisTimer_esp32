@@ -57,6 +57,7 @@ dkms.conf
 # va bene sia */.pio/ che .pio/ anche se su sotto directory
 *.o
 *.obj
+.pio/
 **/build/*
 .activate
 .lnactivate
